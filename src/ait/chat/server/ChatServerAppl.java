@@ -11,12 +11,15 @@ import java.util.concurrent.*;
 public class ChatServerAppl {
     public static void main(String[] args) throws InterruptedException {
         int port = 9000;
+        if (args.length == 1) {
+            port = Integer.parseInt(args[0]);
+        }
         BlockingQueue<String> messageBox = new ArrayBlockingQueue<>(10);
         ChatServerSender sender = new ChatServerSender(messageBox);
         Thread senderThread = new Thread(sender);
         senderThread.setDaemon(true);
         senderThread.start();
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        ExecutorService executorService = Executors.newFixedThreadPool(25);
         try (ServerSocket serverSocket = new ServerSocket(port);) {
             while (true) {
                 System.out.println("Server waiting...");
